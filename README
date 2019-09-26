@@ -1,0 +1,90 @@
+############## README Xenbase GEO NGS analysis Pipeline
+
+############## License : GPL v3.0
+
+############## Please Report Issues or Bugs on GitLab
+
+############## Requirements: CSBB-v3.0(https://github.com/csbbcompbio/CSBB-v3.0), R version[>=3.4], PERL version[>=5.16] and PYTHON version[>=2.7]
+
+############## Analysis pipeline can process public RNA-Seq data for xenopus-tropicalis, xenopus-laevis, human, mouse and zebrafish
+
+############## Analysis pipeline can process public ChIP/ATAC-Seq data for xenopus-tropicalis, xenopus-laevis, human and mouse
+
+############## This analysis pipeline is optimized for public datasets but if you wish to process in-house sequencing data then please refer to CSBB-v3.0(https://github.com/csbbcompbio/CSBB-v3.0)
+
+############## Pipeline currently comes with CSBB-v3.0 incorporated but install operations as described below have to be carried out.
+
+
+*** Please see that all the source codes have extensively tested on MacOS and Linux [Redhat]. Scripts have not been tested on Windows OS. ***
+
+
+############## Installation
+
+Please follow the steps:
+
+1) Download pipeline on your machine (Lets say you have downloaded the pipeline to /Users/xxx/Desktop)
+2) Open Terminal/iterm2
+3) cd /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline               (cd is change directory) [Please see that bin folder and Xenbase_GEO_NGS_AnalysisPipeline.pl are present] [xxx here denotes username]
+4) cd bin/
+5) perl CSBB-v3.0_MacOS.pl install
+6) CSBB will prompt you to download RNA-Seq and ChIP-Seq indexes for genomes   (yes/no) ----> Indexes are required for the pipeline to work
+7) chmod +x *.sh
+
+Notes:
+1) When you run CSBB-v3.0 first time, then please do run install module to automatically download files and install dependencies [tools/softwares]
+2) CSBB-v3.0 can auto install samtools/1.8 but if auto install fails then please install samtools/1.8 using : http://www.htslib.org/doc/samtools.html
+3) CSBB-v3.0 now downloads all the required files and indexes for running RNA-Seq and ChIP/ATAC-Seq pipelines automatically from https://sourceforge.net/projects/csbb-repository/files/?source=navbar.
+   If CSBB is taking a long time to download these files then please directly download files from : https://sourceforge.net/projects/csbb-repository/files/?source=navbar and unzip the files
+   and place all the files and folders inside the Modules folder
+4) CSBB-v3.0 can auto install bowtie2 but if auto install fails then please install bowtie2 using : http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
+5) CSBB-v3.0 can auto install deeptools but if auto install fails please install deeptools using : https://deeptools.readthedocs.io/en/develop/content/installation.html
+6) CSBB-v3.0 now creates a log folder CSBB-v3.0_Logs inside the package folder and write logs for all modules [Log, Error and Exit Status]
+7) Current reference assemblies : Human : hg19 , Mouse : mm10 , Xenopus-Laevis : Laevis_9.2 , Xenopus-Trop : Trop_9.1 and Zebrafish : Zv10
+8) If you wish to use your own reference indexes of Bowtie2 and RSEM then please match the current name and file format of the files in the index folders and place them in the Modules folder
+9) Now CSBB supports processing of public data from SRA [https://www.ncbi.nlm.nih.gov/sra]
+10) If running perl CSBB-v3.0_MacOS.pl or perl CSBB-v3.0_Linux.pl gives an error then follow steps mentioned below:
+   
+   if MacOS then run commands mentioned below from command line:
+   *) sudo perl -MCPAN -e 'install Bundle::CPAN'
+   *) sudo perl -MCPAN -e 'install Capture::Tiny'
+   if Linux then run commands mentioned below from command line:
+    if Ubuntu
+   *) sudo apt-get install build-essential
+   *) sudo apt-get install libbundle-cpan-perl
+   *) sudo apt-get install libcapture-tiny-perl
+   if Redhat
+   *) sudo yum install build-essential
+   *) sudo yum install perl-Bundle-CPAN
+   *) sudo yum install perl-Capture-Tiny
+11) If you do not have administrative privileges on your machine where CSBB-v3.0 is installed then please run CSBB with sudo command : for example : sudo perl CSBB-v3.0_MacOS.pl install or sudo perl CSBB-v3.0_MacOS.pl Process-ChIP-ATAC_SingleEnd
+################################
+
+
+################# Required Inputs
+1) RunFile : Runfile is required for execution of the pipeline. There are 16 columns in the file. GENOME||SPECIES||GSE||TREATMENT||CONTROL||BIGWIG||SRR_TREATMENT||SRR_CONTROL||LIBRARYLAYOUT||ASSAYTYPE||TRACKNAME||XB_ART_ID||PUBMED_ID||BIN_ID||CTRL_BIN_ID||GSE_TITLE
+   Example Runfile is provided along with the pipeline. Technical replicates are separated with underscore (_)
+   
+2) Output Directory : Please provide the name of the output folder along with the path. For example: Lets say the name of the folder is Outs then input is : /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/Outs
+
+3) Operating System : Please provide OS type. Options are : UNIX or LINUX
+
+4) SRA DOWNLOAD FOLDER : Please provide the path where .sra files need to be downloaded. For prefetch you have to set the directory where .sra files need to be downloaded.
+
+
+################# Setting SRA Folder for prefech utility of sratoolkit
+Assume you have downloaded the pipeline and placed it on the desktop.
+Follow the steps below:
+
+1) cd /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/
+2) mkdir sra
+3) cd /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/bin/Modules/sratoolkit.2.9.0-mac64/bin
+4) ./vdb-config -i
+5) change the default folder : /Users/xxx/ncbi/public/sra to /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/sra     [Please see use tab to navigate]
+
+
+
+################# Pipeline Execution
+1) Open Terminal/iterm2
+2) cd /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline
+3) perl Xenbase_GEO_NGS_AnalysisPipeline.pl /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/RunFile.txt /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/Outs UNIX /Users/xxx/Desktop/Xenbase_GEO_NGS_AnalysisPipeline/sra
+#####################################
